@@ -13,12 +13,15 @@ router.get('/archives', function(req, res, next) {
 });
 
 router.get('/categories', function(req, res, next) {
+  const message = req.flash('info')
   categoriesRef.once('value', (sna)=> {
     const categories = sna.val();
     res.render('dashboard/categories', 
     { 
       title: 'Express',
-      categories
+      categories,
+      message,
+      hasInfo: message.length > 0
     });
   });
 });
@@ -44,5 +47,14 @@ router.post('/categories/create', function(req,res){
     res.status(500).send("Error creating category");
   });
 });
+
+router.post('/categories/delete/:id', function(req,res){
+   const id = req.params.id;
+   categoriesRef.child(id).remove();
+   req.flash('info','欄位已刪除')
+   res.redirect('/dashboard/categories');
+})
+
+
 
 module.exports = router;
