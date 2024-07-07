@@ -1,5 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var firebaseAdminDB = require('../connections/firebase_admin');
+
+const ref = firebaseAdminDB.ref()
+ref.once('value',(sna)=>{
+  console.log(sna.val());
+})
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
