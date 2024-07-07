@@ -13,7 +13,14 @@ router.get('/archives', function(req, res, next) {
 });
 
 router.get('/categories', function(req, res, next) {
-  res.render('dashboard/categories', { title: 'Express' });
+  categoriesRef.once('value', (sna)=> {
+    const categories = sna.val();
+    res.render('dashboard/categories', 
+    { 
+      title: 'Express',
+      categories
+    });
+  });
 });
 
 router.get('/signup', function(req, res, next) {
