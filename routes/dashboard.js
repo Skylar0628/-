@@ -37,15 +37,22 @@ router.post('/categories/create', function(req,res){
   const categoryRef = categoriesRef.push();
   const key = categoryRef.key;
   plainData.id = key;
-
-  categoryRef.set(plainData)
-  .then(function(){
-    res.redirect('/dashboard/categories');
+  categoriesRef.orderByChild('path').equalTo(data.path).once('value')
+  .then(function(sna){
+    if(sna.val() !== null){
+      req.flash('info', '已有相同路徑')
+      res.redirect('/dashboard/categories');
+    } else {
+      categoryRef.set(plainData)
+      .then(function(){
+        res.redirect('/dashboard/categories');
+      })
+     .catch(function(error){
+        console.error("Error creating category:", error);
+        res.status(500).send("Error creating category");
+      });
+    }
   })
- .catch(function(error){
-    console.error("Error creating category:", error);
-    res.status(500).send("Error creating category");
-  });
 });
 
 router.post('/categories/delete/:id', function(req,res){
