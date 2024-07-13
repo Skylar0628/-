@@ -71,7 +71,17 @@ router.post('/article/create', function(req, res) {
   articleRef.set(data).then(function(){
     res.redirect(`/dashboard/article/${key}`);
   });
+});
+
+// 編輯文章
+router.post('/article/update/:id', function(req, res) {
+  const data = {...req.body};
+  const id = req.params.id;
+  articlesRef.child(id).update(data).then(function(){
+      res.redirect(`/dashboard/article/${id}`);
+  });
 })
+
 
 // 新增類別
 router.post('/categories/create', function (req, res) {
