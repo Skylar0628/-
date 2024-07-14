@@ -104,7 +104,19 @@ router.post('/article/update/:id', function(req, res) {
   articlesRef.child(id).update(data).then(function(){
       res.redirect(`/dashboard/article/${id}`);
   });
+});
+
+// 刪除類別
+router.post('/article/delete/:id', function (req, res) {
+  const id = req.params.id;
+  articlesRef.child(id).remove();
+  req.flash('info', '文章已刪除');
+  res.send('文章已刪除');
+  res.end();
 })
+
+
+
 
 
 // 新增類別

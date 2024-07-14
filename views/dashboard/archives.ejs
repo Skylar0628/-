@@ -34,7 +34,7 @@
             </div>
           </div>
           <div class="card-footer p-0 btn-group">
-            <a href="#" class="btn btn-outline-danger rounded-0 deletePost" data-id="-L1zrsyiWCAbMQ5x8Plk" data-title="補充課程：Sass 與 includePaths">刪除</a>
+            <a href="#" class="btn btn-outline-danger rounded-0 deletePost" data-id="<%- articles[prop].id%>" data-title="<%-articles[prop].title%>">刪除</a>
             <a href="#" class="btn btn-outline-secondary w-100 rounded-0">編輯</a>
             
             <a href="#" target="_blank" class="btn btn-outline-secondary w-100 rounded-0">預覽</a>
@@ -44,3 +44,24 @@
       <% } %>
   </div>
 </div>
+
+
+<script>
+  $(document).ready(function(){
+    $('.deletePost').on('click',function(e){
+      e.preventDefault();
+      var id = $(this).data('id');
+      var title = $(this).data('title');
+      if (confirm('是否刪除'+title+'?')){
+         $.ajax({
+          url: '/dashboard/article/delete/' + id,
+          method: 'post'
+          
+         }).done((res)=>{
+          console.log(res);
+          window.location='/dashboard/archives';
+         })
+      }
+    })
+  })
+</script>
