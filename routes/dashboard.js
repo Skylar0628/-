@@ -4,6 +4,8 @@ var firebaseAdminDB = require('../connections/firebase_admin');
 
 const categoriesRef = firebaseAdminDB.ref('categories'); 
 const articlesRef = firebaseAdminDB.ref('articles'); 
+const striptags = require('striptags');
+const moment = require('moment');
 
 
 router.get('/article/create', function (req, res, next) {
@@ -36,7 +38,25 @@ router.get('/article/:id', function (req, res, next) {
 
 // 檔案
 router.get('/archives', function (req, res, next) {
-  res.render('dashboard/archives', { title: 'Express' });
+  let categories = {};
+  const articles = [];
+  categoriesRef.once('value').then((sna)=>{
+    categories = sna.val();
+    return articlesRef.orderByChild('update_time').once('value')
+  }).then((sna)=>{
+    sna.forEach(item => {
+      articles.push(item.val());
+    });
+    articles.reverse();
+    res.render('dashboard/archives', { 
+      title: 'Express',
+      articles,
+      striptags,
+      moment,
+      categories
+    });
+  })
+
 });
 
 router.get('/categories', function (req, res, next) {
