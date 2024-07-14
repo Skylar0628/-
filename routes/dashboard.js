@@ -38,6 +38,7 @@ router.get('/article/:id', function (req, res, next) {
 
 // 檔案
 router.get('/archives', function (req, res, next) {
+  const status = req.query.status || 'public'
   let categories = {};
   const articles = [];
   categoriesRef.once('value').then((sna)=>{
@@ -45,7 +46,9 @@ router.get('/archives', function (req, res, next) {
     return articlesRef.orderByChild('update_time').once('value')
   }).then((sna)=>{
     sna.forEach(item => {
-      articles.push(item.val());
+      if (status === item.val().status){
+         articles.push(item.val());
+      }
     });
     articles.reverse();
     res.render('dashboard/archives', { 
@@ -53,7 +56,8 @@ router.get('/archives', function (req, res, next) {
       articles,
       striptags,
       moment,
-      categories
+      categories,
+      status
     });
   })
 
